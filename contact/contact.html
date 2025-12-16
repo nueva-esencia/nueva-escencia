@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrataciones</title>
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+
+        body {
+            /* Force black background immediately so white text is visible */
+            background-color: #290204; 
+            color: white;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; /* Prevents scroll bars if not needed */
+        }
+
+        /* --- BACKGROUND IMAGE --- */
+        .background-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Puts it behind everything */
+            
+            /* Replace the URL below with your image */
+            background-image: url('/images/background/jesus.jpeg');
+            background-size: cover;
+            background-position: center;
+            
+            /* Adds a dark fade at the bottom so text is readable */
+            box-shadow: inset 0 -400px 300px -100px rgba(0,0,0,0.9);
+        }
+
+        /* --- CONTENT CONTAINER (Pinned to Bottom) --- */
+        .bottom-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+            padding-bottom: 3rem; /* Extra space for phones */
+            z-index: 10;
+            
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        /* --- TEXT STYLES --- */
+        .header-text h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
+        .header-text p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 25px;
+            font-weight: 400;
+        }
+
+        /* --- BUTTONS --- */
+        .links-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Space between buttons */
+            max-width: 500px; /* Stops buttons getting too wide on desktop */
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.15); /* See-through glass */
+            backdrop-filter: blur(10px); /* Blurs background behind button */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 15px 20px;
+            
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .btn-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 2px;
+        }
+        
+        .btn-value {
+            font-size: 1.1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="background-layer" id="bg-img"></div>
+
+    <div class="bottom-container">
+        
+        <div class="header-text">
+            <h1 id="my-name">Contrataciones</h1>
+            <p id="my-role">Springfield / Eugene </p>
+        </div>
+
+        <div class="links-grid">
+            
+            <a href="contact@nueva-esencia.com" class="glass-button" id="btn-email">
+                <div>
+                    <span class="btn-label">Email</span>
+                    <span class="btn-value">contact@nueva-esencia.com</span>
+                </div>
+                <span>✉️</span>
+            </a>
+
+            <a href="tel:+15416501923" class="glass-button" id="btn-phone">
+                <div>
+                    <span class="btn-label">Phone</span>
+                    <span class="btn-value">+1 (555) 123-4567</span>
+                </div>
+                <span>📞</span>
+            </a>
+
+            <a href="https://www.instagram.com/mariachinuevaesencia.or/" target="_blank" class="glass-button" id="btn-social">
+                <div>
+                    <span class="btn-label">Social</span>
+                    <span class="btn-value">@mariachinuevaesencia.or</span>
+                </div>
+                <span>📸</span>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+        // You can edit the text here, OR just edit the HTML above directly.
+        
+        // --- SETTINGS ---
+        const config = {
+            backgroundImage: "/images/background/jesus.jpeg",
+            name: "Contrataciones Us",
+            role: "Springfield / Eugene",
+            email: "contact@nuevaescencia.com",
+            phone: "541-650-1923",
+            social: "@mariachinuevaesencia.or"
+        };
+
+        // --- APPLY SETTINGS ---
+        // This lines below update the HTML with the settings above.
+        document.getElementById('bg-img').style.backgroundImage = `url('${config.backgroundImage}')`;
+        document.getElementById('my-name').innerText = config.name;
+        document.getElementById('my-role').innerText = config.role;
+        
+        // Update Email Button
+        document.querySelector('#btn-email .btn-value').innerText = config.email;
+        document.getElementById('btn-email').href = "mailto:" + config.email;
+
+        // Update Phone Button
+        document.querySelector('#btn-phone .btn-value').innerText = config.phone;
+        document.getElementById('btn-phone').href = "tel:" + config.phone;
+
+        // Update Social Button
+        document.querySelector('#btn-social .btn-value').innerText = config.social;
+
+    </script>
+
+</body>
+</html>

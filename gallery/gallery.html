@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería</title>
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+
+        body {
+            color: white;
+            background-color: #240102;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND LAYER (FIXED) --- */
+        /* This stays put while the gallery scrolls over it */
+        .background-layer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            
+            /* Same style background image as contact page */
+            background-image: url('/images/background/background.jpeg');
+            background-size: cover;
+            background-position: center;
+            
+            /* Strong dark fade at the bottom so content is readable */
+            box-shadow: inset 0 -50vh 40vh -10vh rgba(0,0,0,0.95);
+        }
+
+        /* --- MAIN SCROLLABLE CONTAINER --- */
+        .main-container {
+            padding: 2rem;
+            padding-bottom: 4rem; /* Extra space at bottom */
+            max-width: 1000px;
+            margin: 0 auto;
+            min-height: 100vh;
+            
+            display: flex;
+            flex-direction: column;
+            /* Pushes content down initially so header starts lower */
+            justify-content: flex-end; 
+        }
+
+        /* --- HEADER --- */
+        .gallery-header {
+            margin-bottom: 2rem;
+            /* Optional: Add a subtle glass backplate to header for readability */
+            background: rgba(50, 3, 3, 0);
+            backdrop-filter: blur(5px);
+            padding: 1rem;
+            border-radius: 12px;
+            display: inline-block; /* Wraps tight to content */
+        }
+        
+        .gallery-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .gallery-header p { font-size: 1.1rem; color: #ccc; }
+        .back-link { color: #ccc; text-decoration: none; font-size: 0.9rem; margin-bottom: 10px; display: inline-block;}
+        .back-link:hover { text-decoration: underline; color: white;}
+
+        /* --- THE GALLERY GRID --- */
+        .gallery-grid {
+            display: grid;
+            /* Auto-responsive columns: at least 160px wide, fill space */
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+
+        /* --- THE GLASS TILES --- */
+        .glass-tile {
+            position: relative;
+            aspect-ratio: 1 / 1; /* Forces a perfect square */
+            border-radius: 16px;
+            overflow: hidden; /* Clips image corners to match border radius */
+            
+            /* The Glass Style */
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .glass-tile:hover {
+            transform: scale(1.03);
+            border-color: rgba(255, 255, 255, 0.5);
+            z-index: 2;
+        }
+
+        /* Image inside tile */
+        .tile-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image fills square without stretching */
+            opacity: 0.85; /* Slightly see-through to blend with glass */
+            transition: opacity 0.2s;
+        }
+        .glass-tile:hover .tile-media { opacity: 1; }
+
+
+        /* --- VIDEO SPECIFIC STYLES --- */
+        /* Overlay for video tiles */
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3); /* Darken video thumbnail slightly */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .play-icon {
+            font-size: 2rem;
+            color: white;
+            /* A subtle glass circle around the play icon */
+            width: 50px; height: 50px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            padding-left: 4px; /* optical alignment for play triangle */
+        }
+
+        /* Responsive adjustments for larger screens */
+        @media (min-width: 768px) {
+            .gallery-grid {
+                 /* Larger tiles on desktop */
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 25px;
+            }
+            .main-container {
+                /* On desktop, center content vertically instead of bottom alignment */
+                justify-content: center;
+                 padding-top: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-layer" id="bg-img"></div>
+
+    <div class="main-container">
+        
+        <header>
+            <a href="/index.html" class="back-link">← Back to Contact</a>
+            <div class="gallery-header">
+                <h1 id="gallery-title">PORTFOLIO</h1>
+                <p id="gallery-subtitle">Recent photos and video work.</p>
+            </div>
+        </header>
+
+        <div class="gallery-grid" id="grid-container">
+            </div>
+    </div>
+
+
+    <script>
+        // ==========================================
+        // 🛠️ SETTINGS: Define your content here
+        // ==========================================
+        const galleryConfig = {
+            title: "Galería",
+            subtitle: "",
+            // Use the same background as your contact page for consistency
+            backgroundImage: "/images/background/background.jpeg",
+            
+            items: [
+                // Image Item
+                { type: 'image', src: '/images/gallery/Mt Pisgah 1.jpg', alt: 'Mt. Pisgah' },
+                { type: 'image', src: '/images/gallery/La Guadalupana 1.jpg', alt: 'La Guadalupana' },
+                { type: 'image', src: '/images/gallery/Acordeon.jpg', alt: 'Acordeón' },
+                { type: 'image', src: '/images/gallery/La Guadalupana 2.jpg', alt: 'La Guadalupana 2' },
+                { type: 'image', src: '/images/gallery/Mt Pisgah 2.jpg', alt: 'Mt. Pisgah 2' },
+                { type: 'image', src: '/images/gallery/St Mary Catholic Church.jpg', alt: 'St. Mary Catholic Church' },
+                { type: 'image', src: '/images/gallery/Trajes.jpg', alt: 'Trajes' },
+                { type: 'image', src: '/images/gallery/sombrero.jpg', alt: 'Sombrero' }
+            ]
+        };
+
+        // ==========================================
+        // BUILD PAGE FROM SETTINGS
+        // ==========================================
+        
+        // 1. Set Background & Text
+        document.getElementById('bg-img').style.backgroundImage = `url('${galleryConfig.backgroundImage}')`;
+        document.getElementById('gallery-title').innerText = galleryConfig.title;
+        document.getElementById('gallery-subtitle').innerText = galleryConfig.subtitle;
+
+        const gridContainer = document.getElementById('grid-container');
+
+        // 2. Loop through items and create HTML
+        galleryConfig.items.forEach(item => {
+            const tile = document.createElement('div');
+            tile.className = 'glass-tile';
+
+            // Standard Image
+            const img = document.createElement('img');
+            img.className = 'tile-media';
+            // Use 'src' for images, 'thumbnail' for videos
+            img.src = item.type === 'image' ? item.src : item.thumbnail;
+            img.alt = item.alt;
+            tile.appendChild(img);
+
+            // If Video, add overlay
+            if (item.type === 'video') {
+                const overlay = document.createElement('div');
+                overlay.className = 'video-overlay';
+                overlay.innerHTML = '<div class="play-icon">▶</div>';
+                tile.appendChild(overlay);
+                
+                // Optional: Make clicking it go to the video URL
+                tile.onclick = () => window.open(item.videoUrl, '_blank');
+            } else {
+                // Lightbox behavior for images
+                tile.onclick = () => {
+                    // 1. Create the dark background overlay
+                    const lightbox = document.createElement('div');
+                    Object.assign(lightbox.style, {
+                        position: 'fixed',
+                        top: '0',
+                        left: '0',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.9)', // 90% opaque black
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: '10000',
+                        cursor: 'zoom-out'
+                    });
+
+                    // 2. Create the full-size image
+                    const img = document.createElement('img');
+                    img.src = item.url; // Ensure this matches your data property (e.g., item.url or item.src)
+                    img.alt = item.alt;
+                    Object.assign(img.style, {
+                        maxWidth: '90%',
+                        maxHeight: '90%',
+                        objectFit: 'contain',
+                        boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+                    });
+
+                    // 3. Assemble and display
+                    lightbox.appendChild(img);
+                    document.body.appendChild(lightbox);
+
+                    // 4. Click anywhere to close
+                    lightbox.onclick = () => {
+                        document.body.removeChild(lightbox);
+                    };
+                };
+            }
+            gridContainer.appendChild(tile);
+        });
+
+    </script>
+
+</body>
+</html>
